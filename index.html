@@ -1,228 +1,27 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
-
-<title>ECS League</title>
-
 <style>
-body{
-  margin:0;
-  font-family:'Anton', sans-serif;
-  background:#f5f5f5;
-  overflow-x:hidden;
-}
-
-/* SECCIÓN */
-.section{
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  position:relative;
-  overflow:hidden;
-}
-
-/* LOGO */
-.logo{
-  width:180px;
-  margin-bottom:15px;
-  z-index:2;
-}
-
-/* TEXTO */
-.title{
-  font-size:3em;
-  z-index:2;
-}
-
-.btn{
-  margin-top:20px;
-  padding:15px 30px;
-  border:none;
-  border-radius:10px;
-  background:linear-gradient(135deg,#9b59b6,#b57edc);
-  color:white;
-  font-size:1em;
-  cursor:pointer;
-  z-index:2;
-}
-
-/* TABLA */
-.table-container{
-  max-height:400px;
-  overflow-y:auto;
-  width:90%;
-  z-index:2;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-}
-
-th{
-  background:linear-gradient(135deg,#9b59b6,#b57edc);
-  color:white;
-  padding:10px;
-}
-
-td{
-  background:white;
-  padding:10px;
-  text-align:center;
-}
-
-.player{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-}
-
-/* CANVAS */
-canvas{
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-}
+body{font-family:'Anton';text-align:center;background:#f5f5f5;padding:100px;}
+button{padding:15px 30px;background:#9b59b6;color:white;border:none;border-radius:10px;}
 </style>
 </head>
-
 <body>
 
-<!-- INICIO -->
-<div class="section">
-<canvas id="particles1"></canvas>
+<img src="https://i.imgur.com/WBaoUWQ.png" width="180">
 
-<img src="https://i.imgur.com/WBaoUWQ.png" class="logo">
-<h1 class="title">ECS LEAGUE</h1>
-<p style="z-index:2;">El comienzo del competitivo en Minecraft</p>
+<h1>ECS LEAGUE</h1>
 
-<a href="#tabla">
-<button class="btn">Start Now</button>
-</a>
-</div>
+<p>El comienzo del competitivo en Minecraft</p>
 
-<!-- TABLA -->
-<div class="section" id="tabla">
-<canvas id="particles2"></canvas>
+<br>
 
-<img src="https://i.imgur.com/WBaoUWQ.png" class="logo">
-<h2 class="title">Leaderboard</h2>
-
-<div class="table-container">
-<table id="tablaDatos">
-<tr>
-<th>Rank</th>
-<th>Player</th>
-<th>Country</th>
-<th>Team</th>
-</tr>
-</table>
-</div>
-
-</div>
-
-<script>
-
-// 🔥 CONFIGURACIÓN REAL
-const sheetID = "1G1O5Exi5x3G0UNjhN2nvZO-ON3gn9JsalZLdyj9oNMI";
-const url = `https://opensheet.elk.sh/${sheetID}/Form Responses 1`;
-
-// BANDERAS
-function getFlag(country){
-  const map={
-    argentina:"ar", españa:"es", mexico:"mx", méxico:"mx",
-    chile:"cl", colombia:"co", peru:"pe", perú:"pe",
-    "estados unidos":"us"
-  };
-  return map[country?.toLowerCase()]||"xx";
-}
-
-// CARGAR DATOS
-fetch(url)
-.then(res=>res.json())
-.then(data=>{
-  const tabla=document.getElementById("tablaDatos");
-
-  data.forEach((p,i)=>{
-    let fila=document.createElement("tr");
-
-    fila.innerHTML=`
-      <td>${i+1}</td>
-      <td>
-        <div class="player">
-          <img src="https://mc-heads.net/avatar/${p["Nick Minecraft"]}/30">
-          ${p["Nick Minecraft"]||"Sin nombre"}
-        </div>
-      </td>
-      <td>
-        <img src="https://flagcdn.com/w20/${getFlag(p["País"])}.png">
-      </td>
-      <td>${p["Team"]||"-"}</td>
-    `;
-
-    tabla.appendChild(fila);
-  });
-});
-
-// PARTÍCULAS
-function createParticles(id){
-  const canvas=document.getElementById(id);
-  const ctx=canvas.getContext("2d");
-
-  canvas.width=window.innerWidth;
-  canvas.height=window.innerHeight;
-
-  let p=[];
-
-  for(let i=0;i<80;i++){
-    p.push({
-      x:Math.random()*canvas.width,
-      y:Math.random()*canvas.height,
-      r:Math.random()*2,
-      dx:(Math.random()-0.5)*0.5,
-      dy:(Math.random()-0.5)*0.5
-    });
-  }
-
-  function anim(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    p.forEach(e=>{
-      ctx.beginPath();
-      ctx.arc(e.x,e.y,e.r,0,Math.PI*2);
-      ctx.fillStyle="rgba(181,126,220,0.6)";
-      ctx.fill();
-
-      e.x+=e.dx;
-      e.y+=e.dy;
-
-      if(e.x<0)e.x=canvas.width;
-      if(e.x>canvas.width)e.x=0;
-      if(e.y<0)e.y=canvas.height;
-      if(e.y>canvas.height)e.y=0;
-    });
-
-    requestAnimationFrame(anim);
-  }
-
-  anim();
-}
-
-// ACTIVAR
-createParticles("particles1");
-createParticles("particles2");
-
-</script>
+<a href="leaderboard.html"><button>Leaderboard</button></a>
+<br><br>
+<a href="eventos.html"><button>Eventos</button></a>
+<br><br>
+<a href="redes.html"><button>Redes</button></a>
 
 </body>
-  </html>
+</html>
